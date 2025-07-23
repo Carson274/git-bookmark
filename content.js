@@ -30,13 +30,31 @@ function addBookmarkButton() {
   `;
 
   // Add click event listener to the button
-  bookmarkButton.addEventListener('click', () => {
+  bookmarkButton.addEventListener('click', async () => {
     console.log('Bookmark button clicked!');
     const url = window.location.href;
     const title = document.title;
   
     // Bookmark API - bookmark/folder creation
-    chrome.runtime.sendMessage({ action: 'createBookmark', title });
+    try {
+      // Send message and wait for response
+      const response = await chrome.runtime.sendMessage({ 
+        action: 'createBookmark', 
+        title, 
+        url 
+      });
+      
+      if (response.success) {
+        console.log('Bookmark created successfully');
+
+        // Update the button appearance
+        bookmarkButton.querySelector('.Button-label').textContent = 'Bookmarked!';
+      } else {
+        console.error('Failed to create bookmark:', response.error);
+      }
+    } catch (error) {
+      console.error('Error creating bookmark:', error);
+    }
   });
 
   headerActions.insertBefore(bookmarkButton, headerActions.sectionElement);
