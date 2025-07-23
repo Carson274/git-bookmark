@@ -32,10 +32,11 @@ function addBookmarkButton() {
   // Add click event listener to the button
   bookmarkButton.addEventListener('click', () => {
     console.log('Bookmark button clicked!');
-    console.log('Current URL:', window.location.href);
-    console.log('Page title:', document.title);
+    const url = window.location.href;
+    const title = document.title;
   
-    // Bookmark API TBD
+    // Bookmark API - bookmark/folder creation
+    chrome.runtime.sendMessage({ action: 'createBookmark', title });
   });
 
   headerActions.insertBefore(bookmarkButton, headerActions.sectionElement);
