@@ -1,0 +1,10 @@
+{
+  "name": "Git Bookmark",
+  "description": "Organize your PRs with ease",
+  "version": "1.0",
+  "manifest_version": 3,
+  "action": {
+    "default_popup": "gitbookmark.html",
+    "default_icon": "icon.png"
+  }
+}
