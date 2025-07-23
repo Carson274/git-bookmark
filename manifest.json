@@ -21,5 +21,11 @@
       "js": ["content.js"],
       "css": ["styles.css"]
     }
+  ],
+  "web_accessible_resources": [
+    {
+      "resources": ["bookmark-filled.html", "bookmark-outlined.html"],
+      "matches": ["https://github.com/*"]
+    }
   ]
 }

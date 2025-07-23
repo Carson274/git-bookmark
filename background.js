@@ -1,11 +1,27 @@
-// Listener for creating the bookmark
+// Listener for messages from content script
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
-  if (request.action === 'createBookmark') {
-    createBookmark(request.title, request.url)
-      .then(result => sendResponse({ success: true, result }))
-      .catch(error => sendResponse({ success: false, error: error.message }));
-    
-    return true;
+  switch (request.action) {
+    case 'createBookmark':
+      createBookmark(request.title, request.url)
+        .then(result => sendResponse({ success: true, result }))
+        .catch(error => sendResponse({ success: false, error: error.message }));
+      return true;
+
+    case 'checkBookmark':
+      checkIfBookmarked(request.url)
+        .then(result => sendResponse({ isBookmarked: result }))
+        .catch(error => sendResponse({ isBookmarked: false, error: error.message }));
+      return true;
+
+    case 'removeBookmark':
+      removeBookmark(request.url)
+        .then(result => sendResponse({ success: true, result }))
+        .catch(error => sendResponse({ success: false, error: error.message }));
+      return true;
+
+    default:
+      sendResponse({ success: false, error: 'Unknown action' });
+      return false;
   }
 });
 
@@ -30,7 +46,8 @@ async function createBookmark(title, url) {
   }
 }
 
-async function findOrCreateFolder(folderName='PRs') {
+// Function to find or create the PRs folder
+async function findOrCreateFolder(folderName = 'PRs') {
   const bookmarks = await chrome.bookmarks.search({ title: folderName });
   const folder = bookmarks.find(b => !b.url);
   
@@ -43,4 +60,45 @@ async function findOrCreateFolder(folderName='PRs') {
     parentId: '1',
     title: folderName
   });
+}
+
+// Function to find an existing folder (without creating)
+async function findFolder(folderName = 'PRs') {
+  const bookmarks = await chrome.bookmarks.search({ title: folderName });
+  return bookmarks.find(b => !b.url) || null;
+}
+
+// Function to check if a URL is bookmarked in the PRs folder
+async function checkIfBookmarked(url) {
+  try {
+    const folder = await findFolder('PRs');
+    if (!folder) return false;
+    
+    const bookmarks = await chrome.bookmarks.getChildren(folder.id);
+    return bookmarks.some(bookmark => bookmark.url === url);
+  } catch (error) {
+    console.error('Error checking bookmark:', error);
+    return false;
+  }
+}
+
+// Function to remove a bookmark from the PRs folder
+async function removeBookmark(url) {
+  try {
+    const folder = await findFolder('PRs');
+    if (!folder) throw new Error('PRs folder not found');
+    
+    const bookmarks = await chrome.bookmarks.getChildren(folder.id);
+    const bookmark = bookmarks.find(b => b.url === url);
+    
+    if (bookmark) {
+      await chrome.bookmarks.remove(bookmark.id);
+      return { removed: true };
+    }
+    
+    throw new Error('Bookmark not found');
+  } catch (error) {
+    console.error('Error removing bookmark:', error);
+    throw error;
+  }
 }
