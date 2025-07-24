@@ -6,5 +6,26 @@
   "action": {
     "default_popup": "gitbookmark.html",
     "default_icon": "icon.png"
-  }
+  },
+  "background": {
+    "service_worker": "background.js"
+  },
+  "permissions": [
+    "activeTab",
+    "bookmarks",
+    "tabs"
+  ],
+  "content_scripts": [
+    {
+      "matches": ["https://github.com/*"],
+      "js": ["content.js"],
+      "css": ["styles.css"]
+    }
+  ],
+  "web_accessible_resources": [
+    {
+      "resources": ["bookmark-filled.html", "bookmark-outlined.html"],
+      "matches": ["https://github.com/*"]
+    }
+  ]
 }

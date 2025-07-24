@@ -1,0 +1,54 @@
+#bookmark-button {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: space-between;
+  box-sizing: border-box;
+  padding: 3px 12px;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans", Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji";
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 20px;
+  white-space: nowrap;
+  vertical-align: middle;
+  cursor: pointer;
+  user-select: none;
+  border: 1px solid;
+  border-radius: 6px;
+  appearance: none;
+  text-decoration: none;
+  min-height: 28px;
+  gap: 4px;
+  margin: 0;
+  color: var(--fgColor-default, var(--color-fg-default));
+  background-color: var(--button-default-bgColor-rest, var(--color-btn-bg));
+  border-color: var(--button-default-borderColor-rest, var(--color-btn-border));
+  box-shadow: var(--button-default-shadow-resting, var(--color-btn-shadow)), var(--button-default-shadow-inset, var(--color-btn-inset-shadow));
+}
+
+#bookmark-button:hover:not([disabled]) {
+  background-color: var(--button-default-bgColor-hover, var(--color-btn-hover-bg));
+  border-color: var(--button-default-borderColor-hover, var(--color-btn-hover-border));
+}
+
+#bookmark-button:active:not([disabled]) {
+  background-color: var(--button-default-bgColor-active, var(--color-btn-active-bg));
+  border-color: var(--button-default-borderColor-active, var(--color-btn-active-border));
+  box-shadow: none;
+}
+
+#bookmark-button:focus:not([disabled]) {
+  outline: 2px solid var(--focus-outlineColor, var(--color-accent-fg));
+  outline-offset: -2px;
+  box-shadow: none;
+}
+
+#bookmark-button:focus:not(:focus-visible) {
+  outline: none;
+}
+
+#bookmark-button .octicon-bookmark {
+  fill: currentColor;
+  width: 16px;
+  height: 16px;
+}
